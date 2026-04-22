@@ -52,6 +52,7 @@ jobs:
         with:
           name: node-app
           path: ./ragchatbot-tts/.next/standalone
+          include-hidden-files: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,6 +66,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
+          path: ./deploy-package
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -79,5 +81,5 @@ jobs:
         with:
           app-name: 'chatbot-rag-tts'
           slot-name: 'Production'
-          package: .
+          package: ./deploy-package
           
