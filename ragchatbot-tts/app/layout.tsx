@@ -7,8 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Enterprise RAG Chatbot",
-  description: "Powered by Azure AI Foundry",
+  title: "[POC] Zava Chatbot",
+  description: "Zava Chatbot - Powered by Azure AI Foundry",
 };
 
 export default function RootLayout({
