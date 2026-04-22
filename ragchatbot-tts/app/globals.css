@@ -36,6 +36,28 @@ body {
   margin-bottom: 0;
 }
 
+/* Ensure Markdown Lists are visible and correctly styled */
+.chat-bubble ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 1rem;
+}
+
+.chat-bubble ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin-bottom: 1rem;
+}
+
+.chat-bubble li {
+  margin-bottom: 0.25rem;
+}
+
+.chat-bubble a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 /* Typing Indicator Animation */
 .typing-dot {
   display: inline-block;

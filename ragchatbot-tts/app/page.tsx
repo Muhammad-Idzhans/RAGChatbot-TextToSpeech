@@ -253,14 +253,14 @@ export default function ChatbotUI() {
                           <i className="bi bi-stars"></i>
                         </div>
                         <div className="d-flex flex-column align-items-start" style={{ maxWidth: '80%' }}>
-                          <div className="p-3 text-dark border-0 text-break" style={{ backgroundColor: '#f3f4f6', borderRadius: '4px 20px 20px 20px' }}>
+                          <div className="chat-bubble p-3 text-dark border-0 text-break" style={{ backgroundColor: '#f3f4f6', borderRadius: '4px 20px 20px 20px' }}>
                             <ReactMarkdown
                               remarkPlugins={[remarkGfm]}
                               components={{
                                 a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-                                ul: ({ node, ...props }) => <ul className="ps-4 mb-2 list-disc" {...props} />,
-                                ol: ({ node, ...props }) => <ol className="ps-4 mb-2 list-decimal" {...props} />,
-                                li: ({ node, ...props }) => <li className="mb-1" {...props} />
+                                ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
+                                ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
+                                li: ({ node, ...props }) => <li className="mb-0" {...props} />
                               }}
                             >
                               {msg.content}
@@ -273,14 +273,14 @@ export default function ChatbotUI() {
 
                       /* Dynamic User Message */
                       <div key={index} className="d-flex justify-content-end w-100">
-                        <div className="p-3 text-white border-0 shadow-sm text-break" style={{ backgroundColor: '#3b82f6', borderRadius: '20px 20px 4px 20px', maxWidth: '80%' }}>
+                        <div className="chat-bubble p-3 text-white border-0 shadow-sm text-break" style={{ backgroundColor: '#3b82f6', borderRadius: '20px 20px 4px 20px', maxWidth: '80%' }}>
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
                               a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-                              ul: ({ node, ...props }) => <ul className="ps-4 mb-2 list-disc" {...props} />,
-                              ol: ({ node, ...props }) => <ol className="ps-4 mb-2 list-decimal" {...props} />,
-                              li: ({ node, ...props }) => <li className="mb-1" {...props} />
+                              ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
+                              ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
+                              li: ({ node, ...props }) => <li className="mb-0" {...props} />
                             }}
                           >
                             {msg.content}
@@ -298,14 +298,14 @@ export default function ChatbotUI() {
                         <i className="bi bi-stars"></i>
                       </div>
                       <div className="d-flex flex-column align-items-start" style={{ maxWidth: '80%' }}>
-                        <div className="p-3 text-dark border-0 text-break" style={{ backgroundColor: '#f3f4f6', borderRadius: '4px 20px 20px 20px' }}>
+                        <div className="chat-bubble p-3 text-dark border-0 text-break" style={{ backgroundColor: '#f3f4f6', borderRadius: '4px 20px 20px 20px' }}>
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
                               a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-                              ul: ({ node, ...props }) => <ul className="ps-4 mb-2 list-disc text-dark" {...props} />,
-                              ol: ({ node, ...props }) => <ol className="ps-4 mb-2 list-decimal text-dark" {...props} />,
-                              li: ({ node, ...props }) => <li className="mb-1 text-dark" {...props} />
+                              ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
+                              ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
+                              li: ({ node, ...props }) => <li className="mb-0" {...props} />
                             }}
                           >
                             {streamedText}
