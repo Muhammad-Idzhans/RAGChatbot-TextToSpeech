@@ -28,11 +28,23 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-          # Copy static files to standalone directory
+          
+          # Next.js standalone mode can sometimes nest the app in a subdirectory.
+          # We move everything to the root of the standalone folder to ensure 'node server.js' works correctly.
+          if [ -d ".next/standalone/ragchatbot-tts" ]; then
+            cp -r .next/standalone/ragchatbot-tts/. .next/standalone/
+            rm -rf .next/standalone/ragchatbot-tts
+          fi
+          
+          # Copy static files to standalone directory (required for Standalone mode)
           mkdir -p .next/standalone/.next/static
           mkdir -p .next/standalone/public
           cp -r public .next/standalone/ || true
           cp -r .next/static .next/standalone/.next/ || true
+          
+          # Debug: List the files so we can verify the structure in the GitHub logs
+          echo "Final artifact structure:"
+          ls -R .next/standalone
         working-directory: ./ragchatbot-tts
 
       - name: Upload artifact for deployment job
