@@ -29,17 +29,22 @@ jobs:
           npm run build --if-present
           npm run test --if-present
           
-          # We use the OFFICIAL Next.js structure. No flattening.
-          # We copy assets into the nested project folder where server.js will look for them.
-          mkdir -p .next/standalone/ragchatbot-tts/.next/static
-          mkdir -p .next/standalone/ragchatbot-tts/public
+          # Flatten the structure so server.js and .next are at the root
+          if [ -d ".next/standalone/ragchatbot-tts" ]; then
+            echo "Nesting detected. Flattening structure..."
+            cp -ra .next/standalone/ragchatbot-tts/. .next/standalone/
+            rm -rf .next/standalone/ragchatbot-tts
+          fi
           
-          cp -ra public/. .next/standalone/ragchatbot-tts/public/ || true
-          cp -ra .next/static/. .next/standalone/ragchatbot-tts/.next/static/ || true
+          # Copy static files to standalone directory (required for Standalone mode)
+          mkdir -p .next/standalone/.next/static
+          mkdir -p .next/standalone/public
+          cp -ra public/. .next/standalone/public/ || true
+          cp -ra .next/static/. .next/standalone/.next/static/ || true
           
           # Debug: Verify the structure
-          echo "Final artifact structure check (Nested Mode):"
-          ls -la .next/standalone/ragchatbot-tts
+          echo "Final artifact structure check (Flattened):"
+          ls -la .next/standalone
         working-directory: ./ragchatbot-tts
 
       - name: Upload artifact for deployment job
