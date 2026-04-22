@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.1",
+    "@azure/ai-projects": "^2.1.0",
+    "@azure/identity": "^4.13.1",
     "antd": "^6.3.6",
+    "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "microsoft-cognitiveservices-speech-sdk": "^1.49.0",
     "next": "16.2.4",
     "openai": "^6.34.0",
