@@ -29,25 +29,17 @@ jobs:
           npm run build --if-present
           npm run test --if-present
           
-          # Next.js standalone mode nests the app in a subdirectory when using a repo subfolder.
-          # We MUST move everything (INCLUDING hidden .next folder) to the root.
-          # We use 'cp -ra' to ensure hidden files like .next are included.
-          if [ -d ".next/standalone/ragchatbot-tts" ]; then
-            echo "Nesting detected. Flattening structure..."
-            cp -ra .next/standalone/ragchatbot-tts/. .next/standalone/
-            rm -rf .next/standalone/ragchatbot-tts
-          fi
+          # We use the OFFICIAL Next.js structure. No flattening.
+          # We copy assets into the nested project folder where server.js will look for them.
+          mkdir -p .next/standalone/ragchatbot-tts/.next/static
+          mkdir -p .next/standalone/ragchatbot-tts/public
           
-          # Copy static files to standalone directory (required for Standalone mode)
-          # These must be inside the .next folder at the root of the deployment
-          mkdir -p .next/standalone/.next/static
-          mkdir -p .next/standalone/public
-          cp -ra public/. .next/standalone/public/ || true
-          cp -ra .next/static/. .next/standalone/.next/static/ || true
+          cp -ra public/. .next/standalone/ragchatbot-tts/public/ || true
+          cp -ra .next/static/. .next/standalone/ragchatbot-tts/.next/static/ || true
           
-          # Debug: Verify .next folder exists at the root
-          echo "Final artifact structure check:"
-          ls -la .next/standalone
+          # Debug: Verify the structure
+          echo "Final artifact structure check (Nested Mode):"
+          ls -la .next/standalone/ragchatbot-tts
         working-directory: ./ragchatbot-tts
 
       - name: Upload artifact for deployment job
