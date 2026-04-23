@@ -213,8 +213,13 @@ export default function ChatbotUI() {
               onClick={clearChat}
               disabled={isLoading || isStreaming}
               className='btn btn-outline-secondary btn-sm d-flex align-items-center border-0 p-2'
+              title='Clear Chat' // Adds a hover tooltip since we are hiding text on mobile
             >
-              <i className='bi bi-trash me-2'></i>Clear Chat
+              {/* Margin is 0 on mobile, but adds space (me-sm-2) on small screens and up */}
+              <i className='bi bi-trash me-0 me-sm-2'></i>
+
+              {/* Text is hidden by default (d-none), but displays inline on small screens and up (d-sm-inline) */}
+              <span className='d-none d-sm-inline'>Clear Chat</span>
             </button>
           )}
 
