@@ -238,6 +238,16 @@ export default function ChatbotUI() {
                   </div>
                   <h1 className="display-5 fw-bold text-dark mb-2">Zava Chatbot</h1>
                   <span className="text-secondary fs-6">Your personal company assistant</span>
+                  <a
+                    href="https://github.com/Muhammad-Idzhans/RAGChatbot-TextToSpeech/tree/main/document-rag-samples/data"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary fs-7 mt-3 text-decoration-none d-flex align-items-center gap-1"
+                    style={{ fontSize: '0.85rem' }}
+                  >
+                    <i className="bi bi-link-45deg"></i>
+                    View Knowledge Base Source
+                  </a>
                 </div>
 
               ) : (
@@ -389,12 +399,19 @@ export default function ChatbotUI() {
 
               </div>
             </div>
-
           </div>
+          <small className='text-secondary text-center'>
+            Press Enter to send · Shift + Enter for newline
+          </small>
         </div>
 
       </main>
 
+      <footer className="text-center pb-3">
+        <small className="text-secondary" style={{ fontSize: '0.75rem' }}>
+          Data source: <a href="https://github.com/Muhammad-Idzhans/RAGChatbot-TextToSpeech/tree/main/document-rag-samples/data" target="_blank" rel="noopener noreferrer" className="text-decoration-none text-primary">GitHub Repository</a>
+        </small>
+      </footer>
     </div>
   );
 }
