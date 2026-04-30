@@ -15,7 +15,12 @@ export async function POST(req: Request) {
         // We try to pull these from your .env.local if they exist, otherwise we use your fallback strings
         const projectEndpoint = process.env.FOUNDRY_PROJECT_ENDPOINT || "https://poc-chatbot-rag-foundry.services.ai.azure.com/api/projects/Chatbot-SpeechToText";
         const agentName = process.env.AZURE_OPENAI_AGENT_ID || "chatbot-rag";
-        const agentVersion = "12";
+
+        // For ZAVA Agent
+        // const agentVersion = "14";
+
+        // For Hartalega Agent
+        const agentVersion = "11";
 
         // Create the AI Project client
         const projectClient = new AIProjectClient(projectEndpoint, new DefaultAzureCredential());

@@ -54,8 +54,33 @@ body {
 }
 
 .chat-bubble a {
-  color: inherit;
-  text-decoration: underline;
+  color: #2563eb !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+  transition: color 0.15s ease !important;
+}
+
+.chat-bubble a:hover {
+  color: #1d4ed8;
+}
+
+/* Table Styling for Markdown */
+.chat-bubble table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.chat-bubble th,
+.chat-bubble td {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.chat-bubble th {
+  background-color: #f3f4f6;
+  font-weight: 600;
 }
 
 /* Typing Indicator Animation */

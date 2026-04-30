@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { message } from 'antd';
 
 export default function ChatbotUI() {
 
@@ -33,6 +34,38 @@ export default function ChatbotUI() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, streamedText]); // <-- Add streamedText here
 
+  // Blob Storage Link Handler: intercept blob links, generate SAS token, open signed URL
+  const handleBlobLink = async (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.includes('.blob.core.windows.net')) return; // Only intercept blob links
+
+    e.preventDefault();
+    
+    // Show a loading toast that doesn't close automatically (duration: 0)
+    const hideLoading = message.loading('Preparing secure document link...', 0);
+    
+    try {
+      const res = await fetch('/api/blob-sas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ blobUrl: href }),
+      });
+      const data = await res.json();
+      
+      hideLoading(); // Close the loading toast
+      
+      if (data.signedUrl) {
+        message.success('Document opened successfully!', 2);
+        window.open(data.signedUrl, '_blank');
+      } else {
+        message.error('Unable to open this document. Please try again.', 3);
+      }
+    } catch (error) {
+      hideLoading(); // Close the loading toast
+      console.error('Error fetching signed URL:', error);
+      message.error('Unable to open this document. Please check your connection.', 3);
+    }
+  };
+
   // 2. THE ACTION: What happens when we hit "Send"
   const sendMessage = async () => {
     // Prevent sending if empty, loading, or currently typing out a message
@@ -58,25 +91,9 @@ export default function ChatbotUI() {
           setConversationId(data.conversationId);
         }
 
-        // 1. Turn off the "thinking" dots and turn on the "typing" mode
+        // Add the response directly to the message history and let CSS handle the fade-in animation
         setIsLoading(false);
-        setIsStreaming(true);
-
-        // 2. Loop through the reply string and reveal it character by character
-        let currentText = "";
-        const textArray = data.reply.split("");
-
-        for (let i = 0; i < textArray.length; i++) {
-          // Adjust this number (15) to make the typing faster or slower!
-          await new Promise((resolve) => setTimeout(resolve, 1));
-          currentText += textArray[i];
-          setStreamedText(currentText);
-        }
-
-        // 3. Once fully typed, add it permanently to the message history and reset
         setMessages((prevHistory) => [...prevHistory, { role: "assistant", content: data.reply }]);
-        setStreamedText("");
-        setIsStreaming(false);
 
       } else {
         console.error("Agent returned an error:", data.error);
@@ -202,7 +219,7 @@ export default function ChatbotUI() {
           <div className='d-flex align-items-center'>
             <i className='bi bi-stars fs-3 me-3 bg-dark text-white d-flex align-items-center justify-content-center p-2 rounded-3'></i>
             <div className=''>
-              <h5 className='m-0 p-0 fw-bold'>Zava Chatbot</h5>
+              <h5 className='m-0 p-0 fw-bold'>HartaBot 2.0</h5>
               <span className='text-secondary fs-6'>Powered by Microsoft Foundry</span>
             </div>
           </div>
@@ -241,9 +258,10 @@ export default function ChatbotUI() {
                   <div className="mb-3">
                     <i className="bi bi-stars bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px', fontSize: '1.5rem' }}></i>
                   </div>
-                  <h1 className="display-5 fw-bold text-dark mb-2">Zava Chatbot</h1>
-                  <span className="text-secondary fs-6">Your personal company assistant</span>
-                  <a
+                  <h1 className="display-5 fw-bold text-dark mb-2">HartaBot 2.0</h1>
+                  <span className="text-secondary fs-6">Your Hartalega AI Assistant</span>
+
+                  {/* <a
                     href="https://github.com/Muhammad-Idzhans/RAGChatbot-TextToSpeech/tree/main/document-rag-samples/data"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -252,7 +270,8 @@ export default function ChatbotUI() {
                   >
                     <i className="bi bi-link-45deg"></i>
                     View Knowledge Base Source
-                  </a>
+                  </a> */}
+
                 </div>
 
               ) : (
@@ -263,7 +282,7 @@ export default function ChatbotUI() {
                     msg.role === "assistant" ? (
 
                       /* Dynamic Assistant Message */
-                      <div key={index} className="d-flex align-items-start gap-3 w-100">
+                      <div key={index} className="d-flex align-items-start gap-3 w-100 animate-fade-in-up">
                         <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6' }}>
                           <i className="bi bi-stars"></i>
                         </div>
@@ -272,7 +291,12 @@ export default function ChatbotUI() {
                             <ReactMarkdown
                               remarkPlugins={[remarkGfm]}
                               components={{
-                                a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                                a: ({ node, href, ...props }) => <a
+                                  {...props}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => href && handleBlobLink(e, href)}
+                                />,
                                 ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
                                 ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
                                 li: ({ node, ...props }) => <li className="mb-0" {...props} />
@@ -292,7 +316,13 @@ export default function ChatbotUI() {
                           <ReactMarkdown
                             remarkPlugins={[remarkGfm]}
                             components={{
-                              a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                              a: ({ node, href, ...props }) => <a
+                                  {...props}
+                                  href={href}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => href && handleBlobLink(e, href)}
+                                />,
                               ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
                               ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
                               li: ({ node, ...props }) => <li className="mb-0" {...props} />
@@ -305,30 +335,6 @@ export default function ChatbotUI() {
 
                     )
                   ))}
-
-                  {/* --- NEW: The Currently Typing Message --- */}
-                  {isStreaming && (
-                    <div className="d-flex align-items-start gap-3 w-100">
-                      <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '40px', height: '40px', backgroundColor: '#f3f4f6' }}>
-                        <i className="bi bi-stars"></i>
-                      </div>
-                      <div className="d-flex flex-column align-items-start" style={{ maxWidth: '80%' }}>
-                        <div className="chat-bubble p-3 text-dark border-0 text-break" style={{ backgroundColor: '#f3f4f6', borderRadius: '4px 20px 20px 20px' }}>
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            components={{
-                              a: ({ node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
-                              ul: ({ node, ...props }) => <ul className="ps-4 mb-1 list-disc" {...props} />,
-                              ol: ({ node, ...props }) => <ol className="ps-4 mb-1 list-decimal" {...props} />,
-                              li: ({ node, ...props }) => <li className="mb-0" {...props} />
-                            }}
-                          >
-                            {streamedText}
-                          </ReactMarkdown>
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   {/* Typing Indicator */}
                   {isLoading && (
@@ -412,11 +418,11 @@ export default function ChatbotUI() {
 
       </main>
 
-      <footer className="text-center pb-3">
+      {/* <footer className="text-center pb-3">
         <small className="text-secondary" style={{ fontSize: '0.75rem' }}>
           Data source: <a href="https://github.com/Muhammad-Idzhans/RAGChatbot-TextToSpeech/tree/main/document-rag-samples/data" target="_blank" rel="noopener noreferrer" className="text-decoration-none text-primary">GitHub Repository</a>
         </small>
-      </footer>
+      </footer> */}
     </div>
   );
 }

@@ -13,6 +13,7 @@
     "@azure/ai-projects": "^2.1.0",
     "@azure/core-auth": "^1.10.1",
     "@azure/identity": "^4.13.1",
+    "@azure/storage-blob": "^12.31.0",
     "antd": "^6.3.6",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
