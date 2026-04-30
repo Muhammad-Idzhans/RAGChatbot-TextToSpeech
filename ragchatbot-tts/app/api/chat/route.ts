@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         // const agentVersion = "14";
 
         // For Hartalega Agent
-        const agentVersion = "11";
+        const agentVersion = "12";
 
         // Create the AI Project client
         const projectClient = new AIProjectClient(projectEndpoint, new DefaultAzureCredential());
