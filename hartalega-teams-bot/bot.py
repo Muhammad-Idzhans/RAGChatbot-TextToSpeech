@@ -25,8 +25,9 @@ class FoundryBot(ActivityHandler):
 
     def _append_sas_tokens(self, text: str) -> str:
         """Find all Azure Blob Storage URLs in text and append a 1-hour SAS token to each."""
-        # Match blob URLs — handles markdown links like [text](url) and bare URLs
-        blob_pattern = r'https://[a-zA-Z0-9]+\.blob\.core\.windows\.net/[^\s\)\]\>\"]*'
+        # Match blob URLs anchored to file extensions — this avoids breaking on
+        # filenames that contain parentheses like "(Shorten).pptx"
+        blob_pattern = r'https://[a-zA-Z0-9]+\.blob\.core\.windows\.net/\S+?\.(?:pptx|ppt|pdf|docx|doc|xlsx|xls|csv|txt|png|jpg|jpeg|gif|mp4|zip|rar)'
         
         urls = re.findall(blob_pattern, text)
         if not urls:
@@ -105,7 +106,7 @@ class FoundryBot(ActivityHandler):
             # Let the agent process the conversation
             response = self.openai_client.responses.create(
                 conversation=self.conversation_id,
-                extra_body={"agent_reference": {"name": Config.AI_AGENT_NAME, "type": "agent_reference"}}
+                extra_body={"agent_reference": {"name": Config.AI_AGENT_NAME, "version": Config.AI_AGENT_VERSION, "type": "agent_reference"}}
             )
 
             if response.output_text:

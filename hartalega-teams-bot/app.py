@@ -30,7 +30,6 @@ async def messages(req: web.Request) -> web.Response:
         print(f"Error processing request: {e}", flush=True)
         traceback.print_exc()
         raise
-        raise
 
 async def health(req: web.Request) -> web.Response:
     return web.json_response({"status": "healthy"})
